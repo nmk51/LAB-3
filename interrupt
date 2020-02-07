@@ -39,9 +39,9 @@ int main(void){
 
   
  int count1 = 1;
-   while(1)
-
-    {
+ 
+   while(1){
+	   
 
         // The main loop -- toggle the bit, then delay to set the frequency
 if(count1==1)//LIGHT 1
@@ -50,15 +50,9 @@ if(count1==1)//LIGHT 1
 
       wait(250); //DELAY
   PORTC = PORTC ^ 1<<PORTC3; //TURN LIGHT OFF
-  count1 =2;
+  count1 = 2;
  
-  //THIS ISNT WORKING
-  //while(!(PIND & 0b00000100))//IF BUTTON PRESSED
-//  {
- 
- 
-  // }
- 
+  
  
  
 }
@@ -83,13 +77,6 @@ wait(250);//DELAY
 PORTC = PORTC ^ 1<<PORTC1;//TURN LIGHT OFF
 count1 = 4;
 
-//THIS ISNT WORKING
-//while(!(PIND & 0b00000100))//IF BUTTON PRESSED
-//{
-
-
-//}
-
 
 
 
@@ -104,23 +91,13 @@ PORTC = PORTC ^ 1<<PORTC0;
 wait(250);
 PORTC = PORTC ^ 1<<PORTC0;
 count1=1;
-
-//THIS ISNT WORKING
-//while(!(PIND & 0b00000100))//IF BUTTON PRESSED
-//{
-
-
-//}
-
-
-
-  }//LIGHT 4 END
  
     }
 
 
 
-} // end main()
+} 
+}// end main()
 
 
 
@@ -133,7 +110,8 @@ count1=1;
 */
 
 
-ISR(INT0_vect){
+ISR(INT0_vect)
+{
 	
 	 PORTC = 0b11111111; //0
 	 wait(250);
@@ -168,26 +146,27 @@ ISR(INT0_vect){
 	 PORTC = 0b11110000; //15
 	 wait(250);
 	 PORTC = 0xFF;
+	 //wait(250);
 	 EIFR = EIFR | 1<<INTF0;
 	 
 	
 }
 
 
-//ISR(INT1_vect){
+ISR(INT1_vect){
 	
-//PORTC = 0xFF;
-//wait(1);
-//PORTC = 0x0;
+PORTC = 0xFF;
+wait(1);
+PORTC = 0x0;
+wait(250);
+PORTC = 0xFF;
 //wait(250);
-//PORTC = 0xFF;
-
-//EIFR = EIFR | 1<<INTF1;
+EIFR = EIFR | 1<<INTF1;
 	
 	
 	
 	
-//}
+}
 
 
 
@@ -246,8 +225,5 @@ void delay_1_msec_raw_count() {
   count--; // decrement count
 
  }
-
-
- 
 
 }
