@@ -1,172 +1,337 @@
 #include <avr/io.h>
+
 #include <avr/interrupt.h>
+
+
+
 
 
 //** Functions **//
 
+
+
 void wait(volatile int N); // Note that variables in the delay loops are declared as volatile. If not, the compiler will likely
+
+
 
  // see these as not necessary since they are not used for any important tasks or I/O and will eliminate the loops. In fact, if
 
+
+
  // the simulator is used without these being declared volatile, then the loops will be ignored all together in the simulation,
 
+
+
  // and the cycle counter will not grow correctly.
+
+
 
 void delay_1_msec_raw_count();
 
 
 
+
+
+
+
 //** GLOBAL VARIABLES **/
+
+
 
 long freqclk = 16000000; // clock frequency in Hz
 
 
 
+
+
+
+
 int main(void){
+
+
 
  // Setup
 
+
+
  DDRC = 0xFF; // Sets all pins of PORTC to output
 
+
+
  PORTC = 0xFF; // Turn off all pins on PORTC (they are wired as active low)
- 
- DDRD = 0b00000000; //SET TO ALL INPUT 
- //PORTD = 
- EICRA = 0b00001111;
- EIMSK = 1<<INT1 | 1<<INT0;
- sei();
+
  
 
-  
- int count1 = 1;
+ DDRD = 0b00000000; //SET TO ALL INPUT 
+
+ //PORTD = 
+
+ EICRA = 0b00001111;
+
+ EIMSK = 1<<INT1 | 1<<INT0;
+
+ sei();
+
  
+
+
+
+  
+
+ int count1 = 1;
+
+ 
+
    while(1){
+
 	   
 
+
+
         // The main loop -- toggle the bit, then delay to set the frequency
+
 if(count1==1)//LIGHT 1
+
 {
-      PORTC = PORTC ^ 1<<PORTC3 ; //TURN LIGH ON
+
+      PORTC = 0b11110111 ; //TURN LIGH ON
+
+
 
       wait(250); //DELAY
-  PORTC = PORTC ^ 1<<PORTC3; //TURN LIGHT OFF
+
+  //PORTC = PORTC ^ 1<<PORTC3; //TURN LIGHT OFF
+
   count1 = 2;
- 
-  
- 
- 
 }
 
+
+
   if(count1==2)//LIGHT 2
+
   {
-     PORTC = PORTC ^ 1<<PORTC2;//TURN LIGHT ON
+
+     PORTC = 0b11111011;//TURN LIGHT ON
+
  
+
   wait(250);//WAIT
-  PORTC = PORTC ^ 1<<PORTC2;//TURN LIGHT OFF
+
+  //PORTC = PORTC ^ 1<<PORTC2;//TURN LIGHT OFF
+
   count1 = 3;
+
   }
+
  
+
  
+
  
+
  if (count1==3) //LIGHT 3
+
  {
-  PORTC = PORTC ^ 1<<PORTC1;  //TURN LIGHT ON      
+
+  PORTC = 0b11111101;  //TURN LIGHT ON      
+
+
+
 
 
 wait(250);//DELAY
-PORTC = PORTC ^ 1<<PORTC1;//TURN LIGHT OFF
+
+//PORTC = PORTC ^ 1<<PORTC1;//TURN LIGHT OFF
+
 count1 = 4;
 
 
 
 
+
+
+
+
+
   } //LIGHT 3 END
+
  
+
  
+
  
+
  
+
  if (count1==4)//LIGHT 4
+
  {
-PORTC = PORTC ^ 1<<PORTC0;
+
+PORTC = 0b11111110;
+
 wait(250);
-PORTC = PORTC ^ 1<<PORTC0;
+
+//PORTC = PORTC ^ 1<<PORTC0;
+
 count1=1;
+
  
+
     }
 
 
 
+
+
+
+
 } 
+
 }// end main()
+
+
+
+
 
 
 
 /* ============================================
 
+
+
   S U B R O U T I N E S
 
+
+
  ============================================
+
+
 
 */
 
 
+
+
+
 ISR(INT0_vect)
+
 {
+
 	
+
 	 PORTC = 0b11111111; //0
+
 	 wait(250);
+
 	 PORTC = 0b11111110; //1
+
 	 wait(250);
+
 	 PORTC = 0b11111101; //2
+
 	 wait(250);
+
 	 PORTC = 0b11111100;//3
+
 	 wait(250);
+
 	 PORTC = 0b11111011; //4
+
 	 wait(250);
+
 	 PORTC = 0b11111010; //5
+
 	 wait(250);
+
 	 PORTC = 0b11111001; //6
+
 	 wait(250);
+
 	 PORTC = 0b11111000; //7
+
 	 wait(250);
+
 	 PORTC = 0b11110111; //8
+
 	 wait(250);
+
 	 PORTC = 0b11110110;//9
+
 	 wait(250);
+
 	 PORTC = 0b11110101; //10
+
 	 wait(250);
+
 	 PORTC = 0b11110100; //11
+
 	 wait(250);
+
 	 PORTC = 0b11110011; //12
+
 	 wait(250);
+
 	 PORTC = 0b11110010; //13
+
 	 wait(250);
+
 	 PORTC = 0b11110001;//14
+
 	 wait(250);
+
 	 PORTC = 0b11110000; //15
+
 	 wait(250);
+
 	 PORTC = 0xFF;
+
 	 //wait(250);
+
 	 EIFR = EIFR | 1<<INTF0;
-	 
-	
+
 }
+
+
+
 
 
 ISR(INT1_vect){
+
 	
+
 PORTC = 0xFF;
+
 wait(1);
+
 PORTC = 0x0;
+
 wait(250);
+
 PORTC = 0xFF;
+
 //wait(250);
+
 EIFR = EIFR | 1<<INTF1;
+
 	
+
 	
+
 	
+
 	
+
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -178,52 +343,102 @@ EIFR = EIFR | 1<<INTF1;
 
 void wait(volatile int N) {
 
+
+
  //*** wait ***
+
+
 
  
 
+
+
  /* This subroutine creates a delay of N msec by calling another function.
+
+
 
    Inputs: N = number of msec for the delay (N is int, so can be up to 65,536 msec)
 
+
+
    Outputs: None
+
+
 
  */
 
+
+
  while (N>1) { // This loop creates an N msec delay
+
+
 
   N--;
 
+
+
   delay_1_msec_raw_count();
 
+
+
  }
+
+
 
 } // end wait()
 
 
 
+
+
+
+
 void delay_1_msec_raw_count() {
+
+
 
     //*** delay N ms **
 
+
+
     /* This subroutine creates a delay of N msec by using a raw time-killing count.
+
+
 
    Inputs: None
 
+
+
    Outputs: None
+
+
 
  */
 
+
+
  volatile int count = (freqclk/1000-28)/4; // each cycle takes 4 clock cycles, so count is the number of cycles needed to create a 1 msec delay.
+
+
 
          // 28 is the approximate number of other clock cycles used in the subroutine
 
+
+
  while (count > 1) { // This loop is expected to create a 1 msec delay, but it is in fact much longer. Because of the size of the variables,
+
+
 
    // there is a lot more that needs to be done each cycle so the loop takes much longer than 1 msec to execute.
 
+
+
   count--; // decrement count
 
+
+
  }
+
+
 
 }
